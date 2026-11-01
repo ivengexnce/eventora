@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Heart } from 'lucide-react';
 
 interface FooterProps {
   setCurrentTab: (tab: string) => void;
@@ -10,33 +9,33 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal }) => {
   return (
-    <footer className="bg-charcoal-950 text-ivory-100 border-t border-charcoal-800 transition-colors">
+    <footer className="bg-ink-950 text-paper-100 border-t border-ink-800 no-print transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand & Tagline */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-terracotta-500 to-champagne-400 flex items-center justify-center text-white">
-                <Sparkles className="w-4 h-4 text-white" />
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-lg bg-ink-900 border border-ink-700 text-gold-400 flex items-center justify-center font-serif text-sm font-bold">
+                E
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight text-white">
                 EVENTORA
               </span>
             </div>
-            <p className="font-serif italic text-lg text-champagne-200">
+            <p className="font-serif italic text-lg text-gold-300">
               &ldquo;Plan thoughtfully. Celebrate wholeheartedly.&rdquo;
             </p>
-            <p className="text-xs text-charcoal-400 max-w-sm leading-relaxed">
-              GenAI-powered celebration and event planning companion. One intelligent workspace for weddings, birthdays, and community gatherings across India and beyond.
+            <p className="text-xs text-ink-400 max-w-sm leading-relaxed font-normal">
+              GenAI-powered celebration and event planning companion. One intelligent workspace for weddings, birthdays, and community gatherings.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-champagne-400 mb-4">
+            <h4 className="text-[11px] font-mono uppercase tracking-widest text-gold-400 mb-4">
               Workspace
             </h4>
-            <ul className="space-y-2 text-xs text-charcoal-300">
+            <ul className="space-y-2 text-xs text-ink-300">
               <li>
                 <button
                   onClick={() => setCurrentTab('dashboard')}
@@ -80,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
               <li>
                 <button
                   onClick={onOpenCreateModal}
-                  className="text-terracotta-400 hover:text-terracotta-300 font-medium transition-colors"
+                  className="text-gold-400 hover:text-gold-300 font-medium transition-colors"
                 >
                   + Plan New Event
                 </button>
@@ -90,10 +89,10 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
 
           {/* Product & Legal Links */}
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-champagne-400 mb-4">
+            <h4 className="text-[11px] font-mono uppercase tracking-widest text-gold-400 mb-4">
               Explore
             </h4>
-            <ul className="space-y-2 text-xs text-charcoal-300">
+            <ul className="space-y-2 text-xs text-ink-300">
               <li>
                 <button
                   onClick={() => setCurrentTab('landing')}
@@ -119,26 +118,21 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
                 </button>
               </li>
               <li>
-                <span className="text-charcoal-500 cursor-default">Privacy & Security</span>
+                <span className="text-ink-500 cursor-default">Privacy</span>
               </li>
               <li>
-                <span className="text-charcoal-500 cursor-default">Contact Support</span>
+                <span className="text-ink-500 cursor-default">Contact</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-charcoal-800 flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal-400 gap-4">
+        <div className="mt-12 pt-8 border-t border-ink-900 flex flex-col sm:flex-row items-center justify-between text-xs text-ink-500 font-mono gap-4">
           <p>© {new Date().getFullYear()} Eventora. All rights reserved.</p>
-          <p className="flex items-center space-x-1">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-terracotta-500 inline fill-terracotta-500" />
-            <span>for authentic celebrations.</span>
-          </p>
+          <p>PromptWars Virtual · Challenge 05: Celebration & Event Planner</p>
         </div>
       </div>
     </footer>
   );
 };
-

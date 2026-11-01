@@ -3,20 +3,15 @@
 import React, { useState } from 'react';
 import { EventItem, VendorCategory, VendorItem, VendorStatus } from '@/types';
 import {
-  Users2,
-  Plus,
-  Phone,
-  Mail,
-  Edit2,
-  Trash2,
-  X,
-  CheckCircle2,
-  HelpCircle,
-  FileText,
-  IndianRupee,
-  Clock,
-  ChevronDown,
-} from 'lucide-react';
+  IconPlus,
+  IconPhone,
+  IconMail,
+  IconEdit,
+  IconTrash,
+  IconClose,
+  IconMessage,
+  IconCheck,
+} from './Icons';
 import {
   addVendorToEvent,
   updateVendorInEvent,
@@ -32,7 +27,6 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
   activeEvent,
   onOpenCreateModal,
 }) => {
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVendor, setEditingVendor] = useState<VendorItem | null>(null);
 
@@ -47,6 +41,10 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
   const [bookingStatus, setBookingStatus] = useState<VendorStatus>('Contacted');
   const [notes, setNotes] = useState('');
 
+  // AI Script Modal state
+  const [scriptModalVendor, setScriptModalVendor] = useState<VendorItem | null>(null);
+  const [copiedNotice, setCopiedNotice] = useState(false);
+
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
@@ -54,16 +52,15 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
   if (!activeEvent) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-4">
-        <Users2 className="w-12 h-12 text-terracotta-600 mx-auto" />
-        <h2 className="font-serif text-2xl font-bold text-charcoal-900">
+        <h2 className="font-serif text-2xl font-bold text-ink-900">
           No celebration selected
         </h2>
-        <p className="text-sm text-charcoal-600 max-w-md mx-auto">
+        <p className="text-sm text-ink-600 max-w-md mx-auto">
           Please select an active event or create a new celebration to manage vendors and checklists.
         </p>
         <button
           onClick={onOpenCreateModal}
-          className="px-6 py-2.5 rounded-full bg-terracotta-600 text-white font-medium text-xs sm:text-sm"
+          className="px-6 py-2.5 rounded-lg bg-ink-900 text-white font-medium text-xs sm:text-sm"
         >
           Create New Event
         </button>
@@ -152,6 +149,16 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
     }
   };
 
+  const generateVendorScript = (v: VendorItem) => {
+    return `Namaste ${v.contact?.contactPerson || v.name},\n\nWe are organizing a ${activeEvent.eventType} ("${activeEvent.title}") in ${activeEvent.location} on ${activeEvent.eventDate} for approximately ${activeEvent.guestCount} guests.\n\nWe would love to inquire about your availability and discuss catering to our ${activeEvent.theme.toLowerCase()} theme. Our estimated allocation for ${v.category.toLowerCase()} is around ₹${v.estimatedCost.toLocaleString('en-IN')}.\n\nCould you please share your standard package inclusions, staff details, and booking terms?\n\nWarm regards,\nEventora Host`;
+  };
+
+  const handleCopyScript = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedNotice(true);
+    setTimeout(() => setCopiedNotice(false), 2500);
+  };
+
   const vendorCategories: VendorCategory[] = [
     'Venue',
     'Catering',
@@ -179,43 +186,41 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-ivory-200 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-paper-300 pb-6">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-terracotta-600">
-              Trusted Partner Coordination
-            </span>
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-charcoal-900 mt-1">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-gold-600 font-semibold">
+            Partner Roster & Verification
+          </span>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 mt-1">
             The right people make the celebration.
           </h1>
-          <p className="text-sm text-charcoal-600 mt-1">
-            Active Event: <span className="font-semibold text-charcoal-900">{activeEvent.title}</span> ({activeEvent.location})
+          <p className="text-xs sm:text-sm text-ink-500 font-mono mt-1">
+            {activeEvent.title} · {activeEvent.location}
           </p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-xs sm:text-sm shadow-subtle hover:shadow-card transition-all active:scale-[0.98]"
+          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm shadow-subtle transition-all active:scale-[0.98]"
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Vendor</span>
+          <IconPlus className="w-3.5 h-3.5 text-gold-400" />
+          <span>Add Vendor Partner</span>
         </button>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-ivory-200 shadow-subtle text-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-paper-300 shadow-subtle text-xs font-mono">
         {/* Status Filters */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="font-semibold text-charcoal-500 mr-1">Status:</span>
+          <span className="text-ink-400 mr-1 uppercase text-[10px]">Status:</span>
           {['All', ...bookingStatuses].map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1 rounded-full transition-colors ${
+              className={`px-3 py-1 rounded transition-colors ${
                 statusFilter === st
-                  ? 'bg-terracotta-600 text-white font-semibold'
-                  : 'bg-ivory-100 text-charcoal-700 hover:bg-ivory-200'
+                  ? 'bg-ink-900 text-white font-semibold'
+                  : 'bg-paper-100 text-ink-700 hover:bg-paper-200'
               }`}
             >
               {st}
@@ -225,11 +230,11 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
 
         {/* Category Filter */}
         <div className="flex items-center space-x-2">
-          <span className="font-semibold text-charcoal-500">Category:</span>
+          <span className="text-ink-400 uppercase text-[10px]">Category:</span>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-xl border border-ivory-300 text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-terracotta-500"
+            className="px-3 py-1.5 rounded-lg border border-paper-300 text-ink-800 bg-paper-50 focus:outline-none focus:border-ink-900"
           >
             <option value="All">All Categories</option>
             {vendorCategories.map((c) => (
@@ -244,9 +249,9 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
       {/* Vendors Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredVendors.length === 0 ? (
-          <div className="col-span-full p-12 text-center bg-white rounded-3xl border border-ivory-200">
-            <p className="text-sm text-charcoal-400">
-              No vendors found matching these filters. Click &quot;Add Vendor&quot; above to create one.
+          <div className="col-span-full p-12 text-center bg-white rounded-2xl border border-paper-300">
+            <p className="text-sm text-ink-400">
+              No vendors found matching these filters. Click &quot;Add Vendor Partner&quot; above to create one.
             </p>
           </div>
         ) : (
@@ -258,12 +263,12 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
             return (
               <div
                 key={vendor.id}
-                className="p-6 rounded-3xl bg-white border border-ivory-200 shadow-card hover:border-terracotta-200 hover:shadow-floating transition-all flex flex-col justify-between space-y-4"
+                className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card hover:border-ink-400 transition-all flex flex-col justify-between space-y-4"
               >
                 <div className="space-y-3">
                   {/* Category & Status Bar */}
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-ivory-100 text-charcoal-800">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-paper-100 border border-paper-300 text-ink-800">
                       {vendor.category}
                     </span>
 
@@ -271,14 +276,14 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                     <select
                       value={vendor.bookingStatus}
                       onChange={(e) => handleQuickStatusChange(vendor, e.target.value as VendorStatus)}
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border cursor-pointer focus:outline-none ${
+                      className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border cursor-pointer focus:outline-none ${
                         isConfirmed
-                          ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                           : isNegotiating
-                          ? 'bg-amber-100 text-amber-800 border-amber-200'
+                          ? 'bg-gold-50 text-gold-800 border-gold-300'
                           : isCancelled
-                          ? 'bg-rose-100 text-rose-800 border-rose-200'
-                          : 'bg-ivory-200 text-charcoal-700 border-ivory-300'
+                          ? 'bg-ruby-50 text-ruby-800 border-ruby-300'
+                          : 'bg-paper-100 text-ink-700 border-paper-300'
                       }`}
                     >
                       {bookingStatuses.map((st) => (
@@ -290,28 +295,28 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                   </div>
 
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-charcoal-900 leading-snug">
+                    <h3 className="font-serif text-lg font-bold text-ink-900 leading-snug">
                       {vendor.name}
                     </h3>
                     {vendor.contact?.contactPerson && (
-                      <p className="text-xs text-charcoal-500 font-medium">
-                        Lead: {vendor.contact.contactPerson}
+                      <p className="text-xs text-ink-500 font-medium">
+                        Contact: {vendor.contact.contactPerson}
                       </p>
                     )}
                   </div>
 
                   {/* Financial estimate */}
-                  <div className="p-3 rounded-xl bg-ivory-50 border border-ivory-200 flex items-center justify-between text-xs">
+                  <div className="p-3 rounded-lg bg-paper-100 border border-paper-300 flex items-center justify-between text-xs font-mono">
                     <div>
-                      <span className="text-[10px] text-charcoal-400 block">Estimated Cost</span>
-                      <span className="font-serif text-base font-bold text-charcoal-900">
+                      <span className="text-[10px] text-ink-400 block">Target Budget</span>
+                      <span className="font-serif text-base font-bold text-ink-900">
                         ₹{vendor.estimatedCost.toLocaleString('en-IN')}
                       </span>
                     </div>
                     {vendor.actualCost && vendor.actualCost !== vendor.estimatedCost && (
                       <div className="text-right">
-                        <span className="text-[10px] text-charcoal-400 block">Actual Quote</span>
-                        <span className="font-serif text-sm font-bold text-terracotta-700">
+                        <span className="text-[10px] text-ink-400 block">Actual Quote</span>
+                        <span className="font-serif text-sm font-bold text-gold-700">
                           ₹{vendor.actualCost.toLocaleString('en-IN')}
                         </span>
                       </div>
@@ -319,16 +324,16 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                   </div>
 
                   {/* Contact Info */}
-                  <div className="space-y-1.5 text-xs text-charcoal-600 pt-1">
+                  <div className="space-y-1 text-xs text-ink-600 font-mono">
                     {vendor.contact?.phone && (
                       <div className="flex items-center space-x-2">
-                        <Phone className="w-3.5 h-3.5 text-terracotta-500 flex-shrink-0" />
+                        <IconPhone className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
                         <span>{vendor.contact.phone}</span>
                       </div>
                     )}
                     {vendor.contact?.email && (
                       <div className="flex items-center space-x-2">
-                        <Mail className="w-3.5 h-3.5 text-terracotta-500 flex-shrink-0" />
+                        <IconMail className="w-3.5 h-3.5 text-gold-600 flex-shrink-0" />
                         <span className="truncate">{vendor.contact.email}</span>
                       </div>
                     )}
@@ -336,28 +341,39 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
 
                   {/* Notes / Deliverables */}
                   {vendor.notes && (
-                    <div className="pt-2 border-t border-ivory-100 text-[11px] text-charcoal-600 leading-relaxed italic">
+                    <div className="pt-2 border-t border-paper-200 text-[11px] text-ink-600 leading-relaxed font-normal">
                       &ldquo;{vendor.notes}&rdquo;
                     </div>
                   )}
                 </div>
 
                 {/* Card Actions */}
-                <div className="pt-3 border-t border-ivory-100 flex items-center justify-end space-x-2">
+                <div className="pt-3 border-t border-paper-200 flex items-center justify-between text-xs">
+                  {/* AI Script Trigger Button (New Feature) */}
                   <button
-                    onClick={() => handleOpenEditModal(vendor)}
-                    className="p-1.5 rounded-lg text-charcoal-500 hover:text-terracotta-600 hover:bg-terracotta-50 transition-colors"
-                    title="Edit Vendor"
+                    onClick={() => setScriptModalVendor(vendor)}
+                    className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-paper-100 hover:bg-gold-50 hover:text-gold-700 text-ink-700 text-[11px] font-mono transition-colors"
                   >
-                    <Edit2 className="w-3.5 h-3.5" />
+                    <IconMessage className="w-3 h-3 text-gold-600" />
+                    <span>AI Outreach Script</span>
                   </button>
-                  <button
-                    onClick={() => handleDeleteVendor(vendor.id)}
-                    className="p-1.5 rounded-lg text-charcoal-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                    title="Delete Vendor"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => handleOpenEditModal(vendor)}
+                      className="p-1.5 rounded text-ink-500 hover:text-ink-900 hover:bg-paper-200 transition-colors"
+                      title="Edit Vendor"
+                    >
+                      <IconEdit className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteVendor(vendor.id)}
+                      className="p-1.5 rounded text-ink-500 hover:text-ruby-600 hover:bg-ruby-50 transition-colors"
+                      title="Delete Vendor"
+                    >
+                      <IconTrash className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -365,25 +381,66 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
         )}
       </div>
 
+      {/* AI Outreach Script Modal (New Feature) */}
+      {scriptModalVendor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm animate-in fade-in duration-100">
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-elevation border border-paper-300 p-6 sm:p-8 space-y-4">
+            <div className="flex items-center justify-between border-b border-paper-200 pb-3">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-gold-600 font-semibold">
+                  AI Negotiation Script
+                </span>
+                <h3 className="font-serif text-lg font-bold text-ink-900">
+                  Inquiry for {scriptModalVendor.name}
+                </h3>
+              </div>
+              <button
+                onClick={() => setScriptModalVendor(null)}
+                className="p-1 rounded-full text-ink-400 hover:text-ink-700"
+              >
+                <IconClose className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-xl bg-paper-100 border border-paper-300 text-xs text-ink-800 leading-relaxed font-mono whitespace-pre-wrap">
+              {generateVendorScript(scriptModalVendor)}
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-ink-500">
+                Ready to send via WhatsApp or Email
+              </span>
+              <button
+                onClick={() => handleCopyScript(generateVendorScript(scriptModalVendor))}
+                className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-ink-900 hover:bg-ink-950 text-white text-xs font-semibold shadow-subtle transition-colors"
+              >
+                <IconCheck className="w-3.5 h-3.5 text-gold-400" />
+                <span>{copiedNotice ? 'Copied to Clipboard!' : 'Copy Script'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add / Edit Vendor Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal-950/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-floating border border-ivory-200 p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-ivory-200 pb-4">
-              <h3 className="font-serif text-xl font-bold text-charcoal-900">
-                {editingVendor ? 'Edit Vendor Details' : 'Add New Vendor'}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm animate-in fade-in duration-100">
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-elevation border border-paper-300 p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-paper-200 pb-4">
+              <h3 className="font-serif text-xl font-bold text-ink-900">
+                {editingVendor ? 'Edit Vendor Details' : 'Add New Vendor Partner'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-full text-charcoal-400 hover:text-charcoal-700"
+                className="p-1 rounded-full text-ink-400 hover:text-ink-700"
               >
-                <X className="w-5 h-5" />
+                <IconClose className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveVendor} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                   Vendor Name *
                 </label>
                 <input
@@ -391,20 +448,20 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Royal Heritage Caterers or Artisan Beats"
-                  className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                  placeholder="e.g. Royal Heritage Caterers or Aravalli Lens"
+                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                     Category *
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as VendorCategory)}
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                   >
                     {vendorCategories.map((c) => (
                       <option key={c} value={c}>
@@ -415,13 +472,13 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                     Booking Status *
                   </label>
                   <select
                     value={bookingStatus}
                     onChange={(e) => setBookingStatus(e.target.value as VendorStatus)}
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                   >
                     {bookingStatuses.map((st) => (
                       <option key={st} value={st}>
@@ -432,9 +489,9 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 font-mono">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                     Estimated Cost (₹) *
                   </label>
                   <input
@@ -443,40 +500,40 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                     required
                     value={estimatedCost}
                     onChange={(e) => setEstimatedCost(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
-                    Actual / Quoted Cost (₹)
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
+                    Quoted / Actual (₹)
                   </label>
                   <input
                     type="number"
                     min="0"
                     value={actualCost}
                     onChange={(e) => setActualCost(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
-                    Phone Contact
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
+                    Phone Number
                   </label>
                   <input
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98XXX XXXXX"
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                     Contact Person
                   </label>
                   <input
@@ -484,13 +541,13 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                     value={contactPerson}
                     onChange={(e) => setContactPerson(e.target.value)}
                     placeholder="e.g. Master Chef or Manager"
-                    className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                   Email Address
                 </label>
                 <input
@@ -498,36 +555,36 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="contact@vendor.in"
-                  className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20"
+                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1">
-                  Notes & Contract Checklist
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
+                  Contract Notes & Requirements
                 </label>
                 <textarea
                   rows={2}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Power backup included, sound curfew at 10 PM, 50% advance paid."
-                  className="w-full px-3 py-2 rounded-xl border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 resize-none"
+                  placeholder="e.g. Power backup included, sound curfew at 10 PM, 30% advance on signing."
+                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 resize-none"
                 />
               </div>
 
-              <div className="pt-4 border-t border-ivory-200 flex justify-end space-x-3">
+              <div className="pt-4 border-t border-paper-200 flex justify-end space-x-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-full text-xs font-semibold text-charcoal-600 hover:bg-ivory-100"
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-ink-600 hover:bg-paper-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-xs shadow-subtle"
+                  className="px-6 py-2 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-semibold text-xs shadow-subtle"
                 >
-                  {editingVendor ? 'Save Changes' : 'Add Vendor'}
+                  {editingVendor ? 'Save Changes' : 'Add Partner'}
                 </button>
               </div>
             </form>
@@ -537,4 +594,3 @@ export const VendorChecklist: React.FC<VendorChecklistProps> = ({
     </div>
   );
 };
-

@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import { EventType, ThemeType, EventItem } from '@/types';
-import { Sparkles, X, Calendar, MapPin, Users2, IndianRupee, Palette, FileText, Loader2, AlertCircle } from 'lucide-react';
+import {
+  IconClose,
+  IconArrowRight,
+  IconRefresh,
+} from './Icons';
 import { addOrUpdateEvent, setActiveEventId } from '@/lib/storage';
 
 interface CreateEventModalProps {
@@ -16,33 +20,57 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   onClose,
   onEventCreated,
 }) => {
-  // Form State
-  const [eventName, setEventName] = useState('');
+  const [eventName, setEventName] = useState('Ananya & Siddharth Wedding');
   const [eventType, setEventType] = useState<EventType>('Wedding');
   const [eventDate, setEventDate] = useState(() => {
-    // Default 30 days in future
     const d = new Date();
-    d.setDate(d.getDate() + 30);
+    d.setDate(d.getDate() + 45);
     return d.toISOString().split('T')[0];
   });
-  const [location, setLocation] = useState('');
-  const [guestCount, setGuestCount] = useState<number | ''>(100);
-  const [totalBudget, setTotalBudget] = useState<number | ''>(500000);
+  const [location, setLocation] = useState('Mumbai');
+  const [guestCount, setGuestCount] = useState<number | ''>(150);
+  const [totalBudget, setTotalBudget] = useState<number | ''>(300000);
   const [theme, setTheme] = useState<ThemeType>('Traditional');
   const [customTheme, setCustomTheme] = useState('');
-  const [preferences, setPreferences] = useState('');
+  const [preferences, setPreferences] = useState('Coastal sunset ceremony, royal Gujarati thali, acoustic Shehnai welcoming');
 
-  // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
+  const applyPreset = (preset: 'mumbai-wedding' | 'garden-birthday' | 'blr-community') => {
+    if (preset === 'mumbai-wedding') {
+      setEventType('Wedding');
+      setEventName('Ananya & Siddharth Wedding');
+      setLocation('Mumbai');
+      setGuestCount(150);
+      setTotalBudget(300000);
+      setTheme('Traditional');
+      setPreferences('Coastal banquet lawn, Gujarati royal thali, acoustic Shehnai welcoming, marigold decor');
+    } else if (preset === 'garden-birthday') {
+      setEventType('Birthday');
+      setEventName('Garden Glow 30th Birthday');
+      setLocation('Mumbai');
+      setGuestCount(40);
+      setTotalBudget(25000);
+      setTheme('Modern');
+      setPreferences('Bandra rooftop, fairy lights, acoustic guitar set, artisanal grazing boards, pistachio cake');
+    } else {
+      setEventType('Community');
+      setEventName('Utsav Community Diwali Mela');
+      setLocation('Bengaluru');
+      setGuestCount(500);
+      setTotalBudget(250000);
+      setTheme('Traditional');
+      setPreferences('1000 clay oil diyas, zero plastic dinnerware, inter-block rangoli contest, resident food stalls');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Validation
     if (!eventName.trim()) {
       setError('Please provide an event name.');
       return;
@@ -61,11 +89,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
     }
 
     const selectedTheme = theme === 'Custom' ? customTheme.trim() || 'Custom' : theme;
-
     setLoading(true);
 
     try {
-      // Call Gemini API route
       const response = await fetch('/api/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +108,6 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
       });
 
       const resData = await response.json();
-
       if (!resData.success || !resData.data) {
         throw new Error(resData.error || 'Failed to generate plan.');
       }
@@ -90,7 +115,6 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
       const generated = resData.data;
       const newEventId = `evt-${Date.now()}`;
 
-      // Assemble full EventItem
       const newEvent: EventItem = {
         id: newEventId,
         title: eventName.trim(),
@@ -125,13 +149,11 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         recommendations: generated.suggestedRecommendations,
       };
 
-      // Persist
       addOrUpdateEvent(newEvent);
       setActiveEventId(newEvent.id);
       onEventCreated(newEvent);
       onClose();
     } catch (err: any) {
-      console.error('Error during AI plan generation:', err);
       setError(err?.message || 'Something went wrong while generating your plan. Please retry.');
     } finally {
       setLoading(false);
@@ -139,49 +161,62 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal-950/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-floating border border-ivory-200 overflow-hidden my-8">
-        {/* Modal Header */}
-        <div className="px-6 sm:px-8 pt-8 pb-6 bg-gradient-to-br from-ivory-100 to-terracotta-50/40 border-b border-ivory-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-100">
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-elevation border border-paper-300 overflow-hidden my-8">
+        {/* Header */}
+        <div className="px-6 sm:px-8 pt-8 pb-5 border-b border-paper-300 bg-paper-100">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-terracotta-600 text-white flex items-center justify-center shadow-sm">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-terracotta-800">
-                New Celebration Plan
-              </span>
-            </div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-gold-600 font-semibold">
+              AI Event Architecture
+            </span>
             <button
               onClick={onClose}
               disabled={loading}
-              className="p-2 rounded-full text-charcoal-400 hover:text-charcoal-700 hover:bg-ivory-200 transition-colors"
+              className="p-1.5 rounded-full text-ink-400 hover:text-ink-700 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <IconClose className="w-5 h-5" />
             </button>
           </div>
 
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-900 mt-3">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-ink-900 mt-2">
             Let&apos;s plan your celebration.
           </h2>
-          <p className="text-xs sm:text-sm text-charcoal-600 mt-1">
+          <p className="text-xs sm:text-sm text-ink-600 mt-1 font-normal">
             Tell us a little about your event. Our AI will help you turn your vision into a practical plan.
           </p>
+
+          {/* Quick Presets */}
+          <div className="flex flex-wrap items-center gap-2 pt-3">
+            <span className="text-[10px] font-mono text-ink-400">Challenge Presets:</span>
+            <button
+              type="button"
+              onClick={() => applyPreset('mumbai-wedding')}
+              className="px-2.5 py-1 rounded bg-white hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
+            >
+              Mumbai Wedding (150 guests · ₹3L)
+            </button>
+            <button
+              type="button"
+              onClick={() => applyPreset('garden-birthday')}
+              className="px-2.5 py-1 rounded bg-white hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
+            >
+              Garden Birthday (40 guests · ₹25k)
+            </button>
+          </div>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
           {error && (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
+            <div className="p-3 rounded-lg bg-ruby-50 border border-ruby-200 text-ruby-700 text-xs font-medium">
+              {error}
             </div>
           )}
 
           {/* Event Name */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-              Event Name *
+          <div className="space-y-1">
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+              Event Title *
             </label>
             <input
               type="text"
@@ -189,67 +224,63 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               disabled={loading}
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
-              placeholder="e.g. Diya & Kabir's Royal Sangeet or Rohan's 30th Birthday"
-              className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all"
+              placeholder="e.g. Ananya & Siddharth Wedding"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm font-medium text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
             />
           </div>
 
           {/* Event Type & Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
                 Event Type *
               </label>
               <select
                 disabled={loading}
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value as EventType)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white transition-all cursor-pointer"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
               >
-                <option value="Wedding">Wedding Celebration</option>
-                <option value="Birthday">Birthday Celebration</option>
-                <option value="Community">Community Festival / Mela</option>
+                <option value="Wedding">Wedding</option>
+                <option value="Birthday">Birthday</option>
+                <option value="Community">Community Celebration</option>
               </select>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-                Event Date *
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+                Target Date *
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  required
-                  disabled={loading}
-                  value={eventDate}
-                  onChange={(e) => setEventDate(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white transition-all"
-                />
-              </div>
+              <input
+                type="date"
+                required
+                disabled={loading}
+                value={eventDate}
+                onChange={(e) => setEventDate(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+              />
             </div>
           </div>
 
           {/* Location & Guest Count */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-                Location (City or Venue) *
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+                City / Location *
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  disabled={loading}
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Udaipur, Mumbai, Bengaluru"
-                  className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                disabled={loading}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Mumbai"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+              />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
                 Guest Count *
               </label>
               <input
@@ -259,92 +290,85 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={guestCount}
                 onChange={(e) => setGuestCount(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="e.g. 50"
-                className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
               />
             </div>
           </div>
 
           {/* Total Budget & Theme */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
                 Total Budget (INR ₹) *
               </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-charcoal-400 font-bold">
-                  ₹
-                </span>
-                <input
-                  type="number"
-                  min="1000"
-                  step="500"
-                  required
-                  disabled={loading}
-                  value={totalBudget}
-                  onChange={(e) => setTotalBudget(e.target.value === '' ? '' : Number(e.target.value))}
-                  placeholder="500000"
-                  className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all font-medium"
-                />
-              </div>
+              <input
+                type="number"
+                min="1000"
+                step="500"
+                required
+                disabled={loading}
+                value={totalBudget}
+                onChange={(e) => setTotalBudget(e.target.value === '' ? '' : Number(e.target.value))}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm font-semibold text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
+              />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-                Theme *
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+                Theme Direction *
               </label>
               <select
                 disabled={loading}
                 value={theme}
                 onChange={(e) => setTheme(e.target.value as ThemeType)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white transition-all cursor-pointer"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
               >
-                <option value="Traditional">Traditional (Royal / Heritage)</option>
-                <option value="Modern">Modern (Contemporary Chic)</option>
-                <option value="Minimal">Minimal (Clean / Botanical)</option>
-                <option value="Custom">Custom Theme</option>
+                <option value="Traditional">Traditional</option>
+                <option value="Modern">Modern</option>
+                <option value="Minimal">Minimal</option>
+                <option value="Custom">Custom</option>
               </select>
             </div>
           </div>
 
           {theme === 'Custom' && (
-            <div className="space-y-1.5 animate-in fade-in duration-150">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-                Specify Custom Theme
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+                Custom Theme Description
               </label>
               <input
                 type="text"
                 disabled={loading}
                 value={customTheme}
                 onChange={(e) => setCustomTheme(e.target.value)}
-                placeholder="e.g. Boho Sunset, Retro Bollywood, Celestial Starlight"
-                className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all"
+                placeholder="e.g. Royal Bollywood, Rustic Desert Chic"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
               />
             </div>
           )}
 
           {/* Preferences */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-              Special Preferences & Details
+          <div className="space-y-1">
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500">
+              Preferences & Styling Notes
             </label>
             <textarea
-              rows={3}
+              rows={2}
               disabled={loading}
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
-              placeholder="e.g. Sunset golden hour arrival, strictly vegetarian Gujarati feast, acoustic live performance, eco-friendly clay diyas, no plastics."
-              className="w-full px-4 py-2.5 rounded-xl border border-ivory-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500/20 focus:border-terracotta-600 text-sm text-charcoal-900 bg-white placeholder-charcoal-400 transition-all resize-none"
+              placeholder="e.g. Sunset golden hour arrival, Gujarati vegetarian catering, live Shehnai welcoming"
+              className="w-full px-3.5 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 resize-none"
             />
           </div>
 
-          {/* CTA Footer */}
-          <div className="pt-4 border-t border-ivory-200 flex flex-col sm:flex-row items-center justify-end gap-3">
+          {/* Footer CTAs */}
+          <div className="pt-3 border-t border-paper-200 flex flex-col sm:flex-row items-center justify-end gap-3">
             <button
               type="button"
               disabled={loading}
               onClick={onClose}
-              className="w-full sm:w-auto px-6 py-3 rounded-full text-xs font-semibold text-charcoal-600 hover:bg-ivory-100 transition-colors"
+              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold text-ink-600 hover:bg-paper-200"
             >
               Cancel
             </button>
@@ -352,17 +376,17 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-3.5 rounded-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-sm shadow-card hover:shadow-floating transition-all disabled:opacity-70 active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm shadow-subtle transition-all active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Synthesizing AI Plan...</span>
+                  <IconRefresh className="w-3.5 h-3.5 animate-spin text-gold-400" />
+                  <span>Synthesizing Plan...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
                   <span>Generate My AI Event Plan</span>
+                  <IconArrowRight className="w-3.5 h-3.5 text-gold-400" />
                 </>
               )}
             </button>
@@ -372,4 +396,3 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
     </div>
   );
 };
-

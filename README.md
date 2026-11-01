@@ -108,3 +108,4 @@ npm run start
 
 ## 📄 License
 MIT License. Built for celebration planners everywhere.
+

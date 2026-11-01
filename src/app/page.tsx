@@ -72,10 +72,10 @@ export default function Home() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-ivory-50 flex items-center justify-center">
+      <div className="min-h-screen bg-paper-100 flex items-center justify-center">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-2 border-terracotta-600 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="font-serif text-lg font-medium text-charcoal-800">
+          <div className="w-8 h-8 border-2 border-ink-900 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="font-serif text-lg font-bold text-ink-900">
             EVENTORA
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-ivory-50 text-charcoal-900 selection:bg-terracotta-100 selection:text-terracotta-800">
+    <div className="min-h-screen flex flex-col bg-paper-100 text-ink-900 selection:bg-gold-100 selection:text-ink-900">
       {/* Top Navigation */}
       <Navbar
         currentTab={currentTab}
