@@ -79,3 +79,4 @@ export const TableSkeleton: React.FC = () => {
     </div>
   );
 };
+
