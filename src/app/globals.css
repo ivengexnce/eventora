@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 28% 97%;
+    --foreground: 24 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+    --primary: 16 60% 49%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 20% 93%;
+    --secondary-foreground: 24 10% 15%;
+    --muted: 40 15% 91%;
+    --muted-foreground: 25 5% 45%;
+    --accent: 43 65% 52%;
+    --accent-foreground: 24 10% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 35 15% 88%;
+    --input: 35 15% 88%;
+    --ring: 16 60% 49%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    border-color: #EAE2D7;
+  }
+
+  body {
+    background-color: #FAF8F5;
+    color: #1C1917;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #DDD2C3;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C85A32;
+}
+
+/* Subtle animation pulses and transitions */
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-float-subtle {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
