@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --bg-paper: #FAF9F5;
-    --text-ink: #121316;
-    --border-paper: #E7E3D8;
-    --gold: #B88E2F;
+    --bg-paper: #F7F5EE;
+    --text-ink: #141518;
+    --border-paper: #DDD7C8;
+    --gold: #A38035;
   }
 
   body {
-    background-color: #FAF9F5;
-    color: #121316;
+    background-color: #F7F5EE;
+    color: #141518;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -24,20 +24,51 @@
   }
 }
 
-/* Custom scrollbars */
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #EFECE2 25%,
+    #F6F4ED 50%,
+    #EFECE2 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+/* Architectural Hairline Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF9F5;
+  background: #F7F5EE;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D5CFC1;
-  border-radius: 9999px;
+  background: #DDD7C8;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B88E2F;
+  background: #A38035;
 }
 
 /* Print Styles for Executive Dossier */

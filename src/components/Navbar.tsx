@@ -9,7 +9,6 @@ import {
   IconChevronDown,
   IconCheck,
   IconPrinter,
-  IconSparkles,
 } from './Icons';
 
 interface NavbarProps {
@@ -56,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setCurrentTab('landing')}
               className="flex items-center space-x-2.5 text-left group"
             >
-              <div className="w-8 h-8 rounded-lg bg-ink-900 text-gold-400 flex items-center justify-center font-serif text-sm font-bold border border-ink-800 shadow-subtle group-hover:bg-ink-950 transition-colors">
+              <div className="w-8 h-8 rounded-sm bg-ink-900 text-gold-400 flex items-center justify-center font-serif text-sm font-bold border border-ink-800 group-hover:bg-ink-950 transition-colors">
                 E
               </div>
               <div>
@@ -75,9 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   type="button"
                   onClick={() => setEventDropdownOpen(!eventDropdownOpen)}
-                  className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-white border border-paper-300 hover:border-ink-400 text-xs text-ink-700 shadow-subtle transition-all"
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-sm bg-card border border-paper-300 hover:border-ink-400 text-xs text-ink-700 transition-all"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                  <span className="w-1.5 h-1.5 bg-forest-600" />
                   <span className="truncate max-w-[150px] font-medium text-ink-900">
                     {activeEvent.title}
                   </span>
@@ -86,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {eventDropdownOpen && (
                   <div
-                    className="absolute left-0 mt-2 w-72 rounded-xl bg-white shadow-elevation border border-paper-300 py-2 z-50 animate-in fade-in duration-100"
+                    className="absolute left-0 mt-2 w-72 rounded-sm bg-card border border-paper-300 py-2 z-50 animate-in fade-in duration-100"
                     onMouseLeave={() => setEventDropdownOpen(false)}
                   >
                     <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-ink-400">
@@ -120,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setEventDropdownOpen(false);
                           onOpenCreateModal();
                         }}
-                        className="w-full flex items-center space-x-1.5 px-2 py-1.5 rounded-lg text-xs font-medium text-gold-600 hover:bg-gold-50 transition-colors"
+                        className="w-full flex items-center space-x-1.5 px-2 py-1.5 rounded-sm text-xs font-medium text-gold-600 hover:bg-paper-200 transition-colors"
                       >
                         <IconPlus className="w-3 h-3" />
                         <span>Plan New Celebration</span>
@@ -138,10 +137,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => setCurrentTab(item.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition-all ${
+                className={`px-3 py-1.5 rounded-sm text-xs sm:text-sm transition-all ${
                   currentTab === item.id
-                    ? 'text-ink-900 bg-white font-semibold shadow-subtle border border-paper-300'
-                    : 'text-ink-500 hover:text-ink-900 hover:bg-paper-200/60'
+                    ? 'text-ink-900 bg-card font-semibold border border-paper-300'
+                    : 'text-ink-600 hover:text-ink-900 hover:bg-paper-200/60'
                 }`}
               >
                 {item.label}
@@ -154,14 +153,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={handlePrint}
               title="Print / Export Executive Dossier"
-              className="p-2 rounded-lg bg-white border border-paper-300 hover:bg-paper-200 text-ink-600 hover:text-ink-900 transition-colors text-xs"
+              className="p-2 rounded-sm bg-card border border-paper-300 hover:bg-paper-200 text-ink-600 hover:text-ink-900 transition-colors text-xs"
             >
               <IconPrinter className="w-4 h-4" />
             </button>
 
             <button
               onClick={onOpenCreateModal}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-ink-900 hover:bg-ink-950 text-white text-xs sm:text-sm font-medium shadow-subtle transition-all active:scale-[0.98]"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-sm bg-ink-900 hover:bg-ink-950 text-white text-xs sm:text-sm font-medium transition-all active:scale-[0.98]"
             >
               <IconPlus className="w-3.5 h-3.5 text-gold-400" />
               <span>New Event</span>
@@ -172,14 +171,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex md:hidden items-center space-x-2">
             <button
               onClick={onOpenCreateModal}
-              className="p-2 rounded-lg bg-ink-900 text-white"
+              className="p-2 rounded-sm bg-ink-900 text-white"
               title="Create Event"
             >
               <IconPlus className="w-4 h-4 text-gold-400" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-ink-700 hover:bg-paper-200"
+              className="p-2 rounded-sm text-ink-700 hover:bg-paper-200"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <IconClose className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
@@ -191,7 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-paper-300 animate-in slide-in-from-top-2 duration-150">
             {activeEvent && (
-              <div className="mb-3 px-3 py-2 bg-white rounded-xl border border-paper-300">
+              <div className="mb-3 px-3 py-2 bg-card rounded-sm border border-paper-300">
                 <p className="text-[10px] font-mono uppercase text-ink-400">Current Celebration</p>
                 <p className="text-sm font-bold text-ink-900 truncate">{activeEvent.title}</p>
                 <div className="flex items-center justify-between mt-1 text-xs text-ink-500 font-mono">
@@ -209,9 +208,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setCurrentTab(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`px-3 py-2 rounded-lg text-left text-sm transition-colors ${
+                  className={`px-3 py-2 rounded-sm text-left text-sm transition-colors ${
                     currentTab === item.id
-                      ? 'text-ink-900 bg-white font-semibold border border-paper-300'
+                      ? 'text-ink-900 bg-card font-semibold border border-paper-300'
                       : 'text-ink-600 hover:bg-paper-200'
                   }`}
                 >
@@ -226,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setMobileMenuOpen(false);
                   onOpenCreateModal();
                 }}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-ink-900 text-white font-medium text-sm"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-sm bg-ink-900 text-white font-medium text-sm"
               >
                 <IconPlus className="w-4 h-4 text-gold-400" />
                 <span>Create New Plan</span>

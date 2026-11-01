@@ -17,6 +17,7 @@ import {
   deleteTaskFromEvent,
   toggleTaskStatus,
 } from '@/lib/storage';
+import confetti from 'canvas-confetti';
 
 interface SmartTimelineProps {
   activeEvent: EventItem | null;
@@ -80,7 +81,7 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
         </p>
         <button
           onClick={onOpenCreateModal}
-          className="px-6 py-2.5 rounded-lg bg-ink-900 text-white font-medium text-xs sm:text-sm"
+          className="px-6 py-2.5 rounded-sm bg-ink-900 text-white font-medium text-xs sm:text-sm hover:bg-ink-950 transition-colors"
         >
           Create New Event
         </button>
@@ -145,6 +146,22 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
     }
   };
 
+  const handleToggleTaskWithConfetti = (task: TaskItem) => {
+    const willBeCompleted = task.status !== 'Completed';
+    toggleTaskStatus(activeEvent.id, task.id);
+
+    if (willBeCompleted) {
+      try {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.65 },
+          colors: ['#A38035', '#1A4331', '#8E2A2B', '#FAF8F2'],
+        });
+      } catch (err) {}
+    }
+  };
+
   const filteredTasks = tasks.filter((t) => {
     if (filter === 'Pending') return t.status !== 'Completed';
     if (filter === 'Completed') return t.status === 'Completed';
@@ -170,19 +187,19 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
 
         <button
           onClick={handleOpenAddModal}
-          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm shadow-subtle transition-all active:scale-[0.98]"
+          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-sm bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm transition-colors active:scale-[0.99]"
         >
           <IconPlus className="w-3.5 h-3.5 text-gold-400" />
           <span>Add Task Milestone</span>
         </button>
       </div>
 
-      {/* Countdown Clock Banner */}
-      <div className="p-8 sm:p-10 rounded-2xl bg-ink-900 text-white shadow-elevation border border-ink-800 space-y-6">
+      {/* Countdown Clock Banner (No radial orbs, crisp borders) */}
+      <div className="p-8 sm:p-10 rounded-sm bg-ink-900 text-white border border-ink-800 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-ink-800 pb-5">
           <div className="space-y-1">
             <span className="text-[10px] font-mono uppercase tracking-widest text-gold-400 font-semibold">
-              Celebration Countdown
+              Live Celebration Countdown
             </span>
             <h3 className="font-serif text-2xl font-bold">
               {activeEvent.title}
@@ -192,17 +209,17 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             </p>
           </div>
 
-          <div className="text-right">
-            <span className="text-[10px] font-mono uppercase text-ink-400">Readiness</span>
+          <div className="text-left sm:text-right">
+            <span className="text-[10px] font-mono uppercase text-ink-400">Milestone Progress</span>
             <p className="font-serif text-2xl font-bold text-emerald-400 font-mono">
-              {progressPercent}% Complete
+              {completedCount}/{tasks.length} Done ({progressPercent}%)
             </p>
           </div>
         </div>
 
-        {/* Big Digit Counters */}
+        {/* Big Digit Counters with Live Tick */}
         <div className="grid grid-cols-4 gap-3 sm:gap-6 text-center font-mono">
-          <div className="p-4 sm:p-6 rounded-xl bg-ink-950 border border-ink-800">
+          <div className="p-4 sm:p-6 rounded-sm bg-ink-950 border border-ink-800">
             <p className="font-serif text-3xl sm:text-5xl font-bold text-gold-300">
               {timeLeft.days}
             </p>
@@ -211,7 +228,7 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             </p>
           </div>
 
-          <div className="p-4 sm:p-6 rounded-xl bg-ink-950 border border-ink-800">
+          <div className="p-4 sm:p-6 rounded-sm bg-ink-950 border border-ink-800">
             <p className="font-serif text-3xl sm:text-5xl font-bold text-gold-300">
               {timeLeft.hours}
             </p>
@@ -220,7 +237,7 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             </p>
           </div>
 
-          <div className="p-4 sm:p-6 rounded-xl bg-ink-950 border border-ink-800">
+          <div className="p-4 sm:p-6 rounded-sm bg-ink-950 border border-ink-800">
             <p className="font-serif text-3xl sm:text-5xl font-bold text-gold-300">
               {timeLeft.minutes}
             </p>
@@ -229,7 +246,7 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             </p>
           </div>
 
-          <div className="p-4 sm:p-6 rounded-xl bg-ink-950 border border-ink-800">
+          <div className="p-4 sm:p-6 rounded-sm bg-ink-950 border border-ink-800">
             <p className="font-serif text-3xl sm:text-5xl font-bold text-gold-300">
               {timeLeft.seconds}
             </p>
@@ -249,27 +266,27 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
               <button
                 key={opt}
                 onClick={() => setFilter(opt)}
-                className={`px-3 py-1 rounded transition-colors ${
+                className={`px-3 py-1 rounded-sm transition-colors ${
                   filter === opt
                     ? 'bg-ink-900 text-white font-semibold'
-                    : 'bg-white border border-paper-300 text-ink-700 hover:bg-paper-200'
+                    : 'bg-paper-200 text-ink-700 hover:bg-paper-300'
                 }`}
               >
-                {opt === 'High' ? 'High Priority' : opt}
+                {opt}
               </button>
             ))}
           </div>
         </div>
 
-        <span className="text-ink-400 font-mono">
-          Showing {filteredTasks.length} of {tasks.length} tasks ({completedCount} finished)
-        </span>
+        <p className="text-xs text-ink-500 font-mono">
+          Showing {filteredTasks.length} milestones
+        </p>
       </div>
 
-      {/* Tasks List */}
+      {/* Milestone Task List */}
       <div className="space-y-3">
         {filteredTasks.length === 0 ? (
-          <div className="p-12 text-center bg-white rounded-2xl border border-paper-300">
+          <div className="p-12 text-center bg-card rounded-sm border border-paper-300">
             <p className="text-sm text-ink-400">
               No tasks match the selected filter.
             </p>
@@ -281,24 +298,24 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             return (
               <div
                 key={task.id}
-                className={`p-5 sm:p-6 rounded-2xl bg-white border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                className={`p-5 sm:p-6 rounded-sm bg-card border transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                   isCompleted
-                    ? 'border-emerald-200 bg-emerald-50/20'
-                    : 'border-paper-300 hover:border-ink-400 shadow-card'
+                    ? 'border-emerald-300 bg-emerald-50/30'
+                    : 'border-paper-300 hover:border-ink-400'
                 }`}
               >
                 <div className="flex items-start space-x-4">
-                  {/* Interactive toggle button */}
+                  {/* Interactive toggle box */}
                   <button
-                    onClick={() => toggleTaskStatus(activeEvent.id, task.id)}
-                    className="mt-0.5 flex-shrink-0 text-ink-300 hover:text-emerald-600 transition-colors"
+                    onClick={() => handleToggleTaskWithConfetti(task)}
+                    className="mt-0.5 flex-shrink-0 text-ink-300 hover:text-emerald-700 transition-colors"
                     title={isCompleted ? 'Mark Pending' : 'Mark Completed'}
                   >
                     <div
-                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                      className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-colors ${
                         isCompleted
-                          ? 'bg-emerald-600 border-emerald-600 text-white'
-                          : 'border-paper-400 bg-white hover:border-ink-600'
+                          ? 'bg-emerald-700 border-emerald-700 text-white'
+                          : 'border-paper-400 bg-paper-50 hover:border-ink-600'
                       }`}
                     >
                       {isCompleted && <IconCheck className="w-3.5 h-3.5" />}
@@ -308,7 +325,7 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider ${
+                        className={`px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase tracking-wider ${
                           task.priority === 'High'
                             ? 'bg-ruby-50 text-ruby-700 border border-ruby-200'
                             : task.priority === 'Medium'
@@ -318,57 +335,54 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
                       >
                         {task.priority} Priority
                       </span>
-                      <span className="text-[10px] font-mono text-ink-500 bg-paper-100 px-2 py-0.5 rounded border border-paper-200">
+                      <span className="text-[10px] font-mono text-ink-500 bg-paper-100 px-2 py-0.5 rounded-sm border border-paper-200">
                         {task.category}
                       </span>
                       {isCompleted && (
-                        <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-sm border border-emerald-200">
                           Completed
                         </span>
                       )}
                     </div>
 
                     <h4
-                      className={`text-sm sm:text-base font-bold text-ink-900 ${
-                        isCompleted ? 'line-through text-ink-400' : ''
+                      className={`font-semibold text-sm sm:text-base ${
+                        isCompleted ? 'line-through text-ink-400' : 'text-ink-900'
                       }`}
                     >
                       {task.title}
                     </h4>
 
                     {task.description && (
-                      <p className="text-xs text-ink-600 leading-relaxed max-w-2xl font-normal">
+                      <p className="text-xs text-ink-500 max-w-2xl leading-relaxed font-sans">
                         {task.description}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end space-x-4 self-stretch sm:self-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-paper-200">
-                  <div className="text-left sm:text-right text-xs font-mono">
-                    <span className="text-ink-400 block text-[10px]">Due Date</span>
-                    <span className="font-semibold text-ink-800 flex items-center space-x-1">
-                      <IconCalendar className="w-3.5 h-3.5 text-gold-600" />
-                      <span>{task.dueDate}</span>
-                    </span>
+                {/* Due Date & Action controls */}
+                <div className="flex items-center space-x-3 self-end sm:self-center">
+                  <div className="flex items-center space-x-1.5 text-xs font-mono text-ink-500 bg-paper-100 px-3 py-1.5 rounded-sm border border-paper-200">
+                    <IconCalendar className="w-3.5 h-3.5 text-ink-400" />
+                    <span>Due: {task.dueDate}</span>
                   </div>
 
-                  <div className="flex items-center space-x-1">
-                    <button
-                      onClick={() => handleOpenEditModal(task)}
-                      className="p-1.5 rounded-lg text-ink-500 hover:text-ink-900 hover:bg-paper-200 transition-colors"
-                      title="Edit Task"
-                    >
-                      <IconEdit className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      className="p-1.5 rounded-lg text-ink-500 hover:text-ruby-600 hover:bg-ruby-50 transition-colors"
-                      title="Delete Task"
-                    >
-                      <IconTrash className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleOpenEditModal(task)}
+                    className="p-1.5 rounded-sm text-ink-400 hover:text-ink-900 hover:bg-paper-200 transition-colors"
+                    title="Edit Milestone"
+                  >
+                    <IconEdit className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => handleDeleteTask(task.id)}
+                    className="p-1.5 rounded-sm text-ink-400 hover:text-ruby-600 hover:bg-ruby-50 transition-colors"
+                    title="Delete Milestone"
+                  >
+                    <IconTrash className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             );
@@ -378,15 +392,15 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
 
       {/* Add / Edit Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm animate-in fade-in duration-100">
-          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-elevation border border-paper-300 p-6 sm:p-8 space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg bg-card border border-paper-300 rounded-sm p-6 sm:p-8 space-y-6">
             <div className="flex items-center justify-between border-b border-paper-200 pb-4">
               <h3 className="font-serif text-xl font-bold text-ink-900">
-                {editingTask ? 'Edit Milestone Task' : 'Add New Milestone Task'}
+                {editingTask ? 'Edit Task Milestone' : 'Add Task Milestone'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 rounded-full text-ink-400 hover:text-ink-700"
+                className="p-1 rounded-sm text-ink-400 hover:text-ink-700"
               >
                 <IconClose className="w-5 h-5" />
               </button>
@@ -395,47 +409,32 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
             <form onSubmit={handleSaveTask} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
-                  Task Title *
+                  Milestone Title *
                 </label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Confirm acoustic guitarist arrival time"
-                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                  placeholder="e.g. Confirm wedding mandap florist contract"
+                  className="w-full px-3 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
-                  Description
+                  Details / Scope
                 </label>
                 <textarea
                   rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="e.g. Check extension reels and soundcheck by 4:30 PM."
-                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 resize-none"
+                  placeholder="e.g. Ensure delivery includes 50 fresh marigold garlands before 10 AM"
+                  className="w-full px-3 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
-                    Priority *
-                  </label>
-                  <select
-                    value={priority}
-                    onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
-                  >
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
-                </div>
-
                 <div>
                   <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
                     Due Date *
@@ -445,21 +444,36 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
                     required
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                    className="w-full px-3 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
+                    Priority Level
+                  </label>
+                  <select
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                    className="w-full px-3 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                  >
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono uppercase tracking-wider text-ink-500 mb-1">
-                  Category
+                  Category Tag
                 </label>
                 <input
                   type="text"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  placeholder="e.g. Venue, Catering, Entertainment"
-                  className="w-full px-3 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                  placeholder="e.g. Venue, Florals, Catering, Attire"
+                  className="w-full px-3 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
                 />
               </div>
 
@@ -467,15 +481,15 @@ export const SmartTimeline: React.FC<SmartTimelineProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-xs font-semibold text-ink-600 hover:bg-paper-200"
+                  className="px-4 py-2 rounded-sm text-xs font-semibold text-ink-600 hover:bg-paper-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-semibold text-xs shadow-subtle"
+                  className="px-6 py-2 rounded-sm bg-ink-900 hover:bg-ink-950 text-white font-semibold text-xs"
                 >
-                  {editingTask ? 'Save Changes' : 'Add Milestone'}
+                  {editingTask ? 'Save Changes' : 'Create Milestone'}
                 </button>
               </div>
             </form>

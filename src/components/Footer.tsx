@@ -5,17 +5,22 @@ import React from 'react';
 interface FooterProps {
   setCurrentTab: (tab: string) => void;
   onOpenCreateModal: () => void;
+  onOpenLegalModal?: (tab: 'tos' | 'privacy') => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal }) => {
+export const Footer: React.FC<FooterProps> = ({
+  setCurrentTab,
+  onOpenCreateModal,
+  onOpenLegalModal,
+}) => {
   return (
     <footer className="bg-ink-950 text-paper-100 border-t border-ink-800 no-print transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand & Tagline */}
+          {/* Brand and Tagline */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-lg bg-ink-900 border border-ink-700 text-gold-400 flex items-center justify-center font-serif text-sm font-bold">
+              <div className="w-8 h-8 rounded-sm bg-ink-900 border border-ink-700 text-gold-400 flex items-center justify-center font-serif text-sm font-bold">
                 E
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight text-white">
@@ -73,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
                   onClick={() => setCurrentTab('vendors')}
                   className="hover:text-white transition-colors"
                 >
-                  Vendor Management
+                  Vendor Management & WhatsApp
                 </button>
               </li>
               <li>
@@ -87,10 +92,10 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
             </ul>
           </div>
 
-          {/* Product & Legal Links */}
+          {/* Product and Legal Links */}
           <div>
             <h4 className="text-[11px] font-mono uppercase tracking-widest text-gold-400 mb-4">
-              Explore
+              Governance & Policies
             </h4>
             <ul className="space-y-2 text-xs text-ink-300">
               <li>
@@ -106,22 +111,27 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentTab, onOpenCreateModal
                   onClick={() => setCurrentTab('landing')}
                   className="hover:text-white transition-colors"
                 >
-                  Core Features
+                  Core Architecture
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => setCurrentTab('recommendations')}
-                  className="hover:text-white transition-colors"
+                  onClick={() => onOpenLegalModal && onOpenLegalModal('tos')}
+                  className="hover:text-white transition-colors text-left"
                 >
-                  Curated Inspiration
+                  Terms of Service (TOS)
                 </button>
               </li>
               <li>
-                <span className="text-ink-500 cursor-default">Privacy</span>
+                <button
+                  onClick={() => onOpenLegalModal && onOpenLegalModal('privacy')}
+                  className="hover:text-white transition-colors text-left"
+                >
+                  Privacy Policy & Data Security
+                </button>
               </li>
               <li>
-                <span className="text-ink-500 cursor-default">Contact</span>
+                <span className="text-ink-500 font-mono text-[11px]">Contact: privacy@eventora.app</span>
               </li>
             </ul>
           </div>

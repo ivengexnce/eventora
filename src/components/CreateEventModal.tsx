@@ -161,8 +161,8 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-100">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-elevation border border-paper-300 overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/60 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-100">
+      <div className="relative w-full max-w-2xl bg-card rounded-sm border border-paper-300 overflow-hidden my-8">
         {/* Header */}
         <div className="px-6 sm:px-8 pt-8 pb-5 border-b border-paper-300 bg-paper-100">
           <div className="flex items-center justify-between">
@@ -172,7 +172,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <button
               onClick={onClose}
               disabled={loading}
-              className="p-1.5 rounded-full text-ink-400 hover:text-ink-700 transition-colors"
+              className="p-1.5 rounded-sm text-ink-500 hover:text-ink-800 hover:bg-paper-200 transition-colors"
             >
               <IconClose className="w-5 h-5" />
             </button>
@@ -191,14 +191,14 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <button
               type="button"
               onClick={() => applyPreset('mumbai-wedding')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
+              className="px-2.5 py-1 rounded-sm bg-card hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
             >
               Mumbai Wedding (150 guests · ₹3L)
             </button>
             <button
               type="button"
               onClick={() => applyPreset('garden-birthday')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
+              className="px-2.5 py-1 rounded-sm bg-card hover:bg-paper-200 border border-paper-300 text-[11px] font-medium text-ink-800 transition-colors"
             >
               Garden Birthday (40 guests · ₹25k)
             </button>
@@ -208,7 +208,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
           {error && (
-            <div className="p-3 rounded-lg bg-ruby-50 border border-ruby-200 text-ruby-700 text-xs font-medium">
+            <div className="p-3 rounded-sm bg-ruby-50 border border-ruby-200 text-ruby-700 text-xs font-medium">
               {error}
             </div>
           )}
@@ -225,7 +225,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
               placeholder="e.g. Ananya & Siddharth Wedding"
-              className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm font-medium text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+              className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm font-medium text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
             />
           </div>
 
@@ -239,7 +239,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value as EventType)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
               >
                 <option value="Wedding">Wedding</option>
                 <option value="Birthday">Birthday</option>
@@ -257,7 +257,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
               />
             </div>
           </div>
@@ -275,7 +275,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Mumbai"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
               />
             </div>
 
@@ -290,7 +290,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={guestCount}
                 onChange={(e) => setGuestCount(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
               />
             </div>
           </div>
@@ -309,7 +309,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={totalBudget}
                 onChange={(e) => setTotalBudget(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm font-semibold text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm font-semibold text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 font-mono"
               />
             </div>
 
@@ -321,7 +321,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 disabled={loading}
                 value={theme}
                 onChange={(e) => setTheme(e.target.value as ThemeType)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 cursor-pointer"
               >
                 <option value="Traditional">Traditional</option>
                 <option value="Modern">Modern</option>
@@ -342,7 +342,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 value={customTheme}
                 onChange={(e) => setCustomTheme(e.target.value)}
                 placeholder="e.g. Royal Bollywood, Rustic Desert Chic"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
+                className="w-full px-3.5 py-2.5 rounded-sm border border-paper-300 text-sm text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900"
               />
             </div>
           )}
@@ -358,7 +358,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
               placeholder="e.g. Sunset golden hour arrival, Gujarati vegetarian catering, live Shehnai welcoming"
-              className="w-full px-3.5 py-2 rounded-lg border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 resize-none"
+              className="w-full px-3.5 py-2 rounded-sm border border-paper-300 text-xs text-ink-900 bg-paper-50 focus:outline-none focus:border-ink-900 resize-none"
             />
           </div>
 
@@ -368,7 +368,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               type="button"
               disabled={loading}
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold text-ink-600 hover:bg-paper-200"
+              className="w-full sm:w-auto px-4 py-2 rounded-sm text-xs font-semibold text-ink-600 hover:bg-paper-200"
             >
               Cancel
             </button>
@@ -376,7 +376,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm shadow-subtle transition-all active:scale-[0.98] disabled:opacity-60"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-sm bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm transition-all active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? (
                 <>

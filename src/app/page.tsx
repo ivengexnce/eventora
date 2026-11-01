@@ -18,12 +18,17 @@ import { SmartTimeline } from '@/components/SmartTimeline';
 import { VendorChecklist } from '@/components/VendorChecklist';
 import { AIRecommendations } from '@/components/AIRecommendations';
 import { CreateEventModal } from '@/components/CreateEventModal';
+import { LegalModal } from '@/components/LegalModal';
 
 export default function Home() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [activeEventId, setActiveId] = useState<string>('');
   const [currentTab, setCurrentTab] = useState<string>('landing');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [legalModalState, setLegalModalState] = useState<{ isOpen: boolean; tab: 'tos' | 'privacy' }>({
+    isOpen: false,
+    tab: 'tos',
+  });
   const [mounted, setMounted] = useState<boolean>(false);
 
   // Hydration sync
@@ -163,10 +168,18 @@ export default function Home() {
         onEventCreated={handleEventCreated}
       />
 
+      {/* Legal Modal (Terms of Service & Privacy Policy) */}
+      <LegalModal
+        isOpen={legalModalState.isOpen}
+        onClose={() => setLegalModalState((prev) => ({ ...prev, isOpen: false }))}
+        initialTab={legalModalState.tab}
+      />
+
       {/* Footer */}
       <Footer
         setCurrentTab={setCurrentTab}
         onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onOpenLegalModal={(tab) => setLegalModalState({ isOpen: true, tab })}
       />
     </div>
   );

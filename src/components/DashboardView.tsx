@@ -9,8 +9,6 @@ import {
   IconCalendar,
   IconMapPin,
   IconUsers,
-  IconClock,
-  IconWallet,
 } from './Icons';
 import { calculateBudgetSummary, calculateDashboardMetrics } from '@/lib/storage';
 
@@ -71,14 +69,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-ink-900">
             Let&apos;s make something worth celebrating.
           </h1>
-          <p className="text-sm sm:text-base text-ink-600 mt-1 font-normal">
-            Your celebrations, plans and priorities — all in one place.
+          <p className="text-sm sm:text-base text-ink-600 mt-1 font-normal font-sans">
+            Your celebrations, plans, and priorities in one unified workspace.
           </p>
         </div>
 
         <button
           onClick={onOpenCreateModal}
-          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm shadow-subtle transition-all active:scale-[0.98]"
+          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-sm bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs sm:text-sm transition-colors active:scale-[0.99]"
         >
           <IconPlus className="w-3.5 h-3.5 text-gold-400" />
           <span>Create New Event</span>
@@ -88,7 +86,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Top 4 Dashboard Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Active Events */}
-        <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-2">
+        <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
               Active Events
@@ -106,7 +104,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Total Budget */}
-        <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-2">
+        <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
               Total Budget
@@ -123,7 +121,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Total Expenses */}
-        <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-2">
+        <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
               Total Expenses
@@ -140,7 +138,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Tasks Completed */}
-        <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-2">
+        <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
               Tasks Completed
@@ -154,9 +152,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {metrics.taskCompletionRate}%
             </span>
           </div>
-          <div className="w-full bg-paper-200 rounded-full h-1.5 overflow-hidden">
+          <div className="w-full bg-paper-200 rounded-none h-1.5 overflow-hidden">
             <div
-              className="bg-emerald-600 h-1.5 rounded-full"
+              className="bg-emerald-700 h-1.5"
               style={{ width: `${metrics.taskCompletionRate}%` }}
             />
           </div>
@@ -172,8 +170,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <h2 className="font-serif text-xl font-bold text-ink-900">
                 Upcoming Celebrations
               </h2>
-              <p className="text-xs text-ink-500">
-                Click any event to switch active workspace focus
+              <p className="text-xs text-ink-500 font-sans">
+                Select any celebration to set workspace focus
               </p>
             </div>
             <span className="text-xs font-mono text-ink-400">
@@ -193,20 +191,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div
                   key={evt.id}
                   onClick={() => onSelectEvent(evt.id)}
-                  className={`p-6 rounded-2xl bg-white border transition-all cursor-pointer hover:shadow-card ${
+                  className={`p-6 rounded-sm bg-card border transition-colors cursor-pointer ${
                     isActive
-                      ? 'border-ink-900 ring-1 ring-ink-900 shadow-card'
+                      ? 'border-ink-900 ring-1 ring-ink-900'
                       : 'border-paper-300 hover:border-paper-400'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-paper-100 border border-paper-300 text-ink-800">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase bg-paper-100 border border-paper-300 text-ink-800">
                           {evt.eventType}
                         </span>
                         {isActive && (
-                          <span className="px-2 py-0.5 rounded bg-ink-900 text-white text-[10px] font-mono">
+                          <span className="px-2 py-0.5 rounded-sm bg-ink-900 text-white text-[10px] font-mono">
                             Active Focus
                           </span>
                         )}
@@ -242,7 +240,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           onSelectEvent(evt.id);
                           onNavigateTab('studio');
                         }}
-                        className="inline-flex items-center space-x-1 px-3 py-1 rounded bg-paper-100 hover:bg-paper-200 text-ink-800 text-xs font-medium border border-paper-300 transition-colors"
+                        className="inline-flex items-center space-x-1 px-3 py-1 rounded-sm bg-paper-100 hover:bg-paper-200 text-ink-800 text-xs font-medium border border-paper-300 transition-colors"
                       >
                         <span>Open AI Studio</span>
                         <IconArrowRight className="w-3 h-3 text-gold-600" />
@@ -257,9 +255,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <span>Milestones</span>
                         <span className="font-semibold text-ink-800">{taskPercent}%</span>
                       </div>
-                      <div className="w-full bg-paper-200 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-full bg-paper-200 rounded-none h-1.5 overflow-hidden">
                         <div
-                          className="bg-emerald-600 h-1.5 rounded-full"
+                          className="bg-emerald-700 h-1.5"
                           style={{ width: `${taskPercent}%` }}
                         />
                       </div>
@@ -267,17 +265,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                     <div>
                       <div className="flex justify-between text-ink-500 mb-1">
-                        <span>Budget Spent</span>
+                        <span>Budget Committed</span>
                         <span className="font-semibold text-ink-800">
                           ₹{summary.actualExpenses.toLocaleString('en-IN')} / ₹{summary.totalBudget.toLocaleString('en-IN')}
                         </span>
                       </div>
-                      <div className="w-full bg-paper-200 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-full bg-paper-200 rounded-none h-1.5 overflow-hidden">
                         <div
-                          className={`h-1.5 rounded-full ${
-                            summary.overBudgetAmount > 0 ? 'bg-ruby-500' : 'bg-gold-500'
+                          className={`h-1.5 ${
+                            summary.overBudgetAmount > 0 ? 'bg-ruby-600' : 'bg-gold-500'
                           }`}
-                          style={{ width: `${summary.utilizationPercentage}%` }}
+                          style={{ width: `${Math.min(100, summary.utilizationPercentage)}%` }}
                         />
                       </div>
                     </div>
@@ -289,7 +287,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Planning Progress Breakdown */}
           {activeEvent && (
-            <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-4">
+            <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-4">
               <div className="flex items-center justify-between border-b border-paper-200 pb-3">
                 <div>
                   <h3 className="font-serif text-lg font-bold text-ink-900">
@@ -309,7 +307,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1 font-mono">
-                <div className="p-4 rounded-xl bg-paper-100 border border-paper-300">
+                <div className="p-4 rounded-sm bg-paper-100 border border-paper-300">
                   <p className="text-xs text-ink-500">Tasks Completed</p>
                   <p className="font-serif text-xl font-bold text-ink-900 mt-1">
                     {(activeEvent.tasks || []).filter((t) => t.status === 'Completed').length} of{' '}
@@ -320,7 +318,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-paper-100 border border-paper-300">
+                <div className="p-4 rounded-sm bg-paper-100 border border-paper-300">
                   <p className="text-xs text-ink-500">Confirmed Vendors</p>
                   <p className="font-serif text-xl font-bold text-ink-900 mt-1">
                     {(activeEvent.vendors || []).filter((v) => v.bookingStatus === 'Confirmed').length} of{' '}
@@ -331,8 +329,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-paper-100 border border-paper-300">
-                  <p className="text-xs text-ink-500">Remaining Budget</p>
+                <div className="p-4 rounded-sm bg-paper-100 border border-paper-300">
+                  <p className="text-xs text-ink-500">Remaining Buffer</p>
                   <p className="font-serif text-xl font-bold text-ink-900 mt-1">
                     ₹{(activeSummary?.remainingAmount || 0).toLocaleString('en-IN')}
                   </p>
@@ -345,10 +343,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           )}
         </div>
 
-        {/* Right Column: Deadlines & Activity */}
+        {/* Right Column: Deadlines and Activity */}
         <div className="space-y-6">
           {/* Upcoming Deadlines */}
-          <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-4">
+          <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-4">
             <div className="flex items-center justify-between border-b border-paper-200 pb-3">
               <h3 className="font-serif text-base font-bold text-ink-900">
                 Upcoming Deadlines
@@ -370,12 +368,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 upcomingDeadlines.map((task) => (
                   <div
                     key={task.id}
-                    className="p-3 rounded-xl bg-paper-50 border border-paper-200 flex items-start justify-between gap-3"
+                    className="p-3 rounded-sm bg-paper-50 border border-paper-200 flex items-start justify-between gap-3"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
                         <span
-                          className={`px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider ${
+                          className={`px-1.5 py-0.5 rounded-sm text-[9px] font-mono uppercase tracking-wider ${
                             task.priority === 'High'
                               ? 'bg-ruby-50 text-ruby-700 border border-ruby-200'
                               : task.priority === 'Medium'
@@ -389,7 +387,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           {task.eventTitle}
                         </span>
                       </div>
-                      <p className="text-xs font-semibold text-ink-900 leading-snug">
+                      <p className="text-xs font-semibold text-ink-900 leading-snug font-sans">
                         {task.title}
                       </p>
                       <p className="text-[10px] font-mono text-ink-400">
@@ -399,7 +397,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                     <button
                       onClick={() => onToggleTask(task.eventId, task.id)}
-                      className="p-1 rounded text-ink-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+                      className="p-1 rounded-sm text-ink-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
                       title="Mark complete"
                     >
                       <IconCheck className="w-4 h-4" />
@@ -411,7 +409,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* Recent Activity */}
-          <div className="p-6 rounded-2xl bg-white border border-paper-300 shadow-card space-y-4">
+          <div className="p-6 rounded-sm bg-card border border-paper-300 space-y-4">
             <div className="flex items-center justify-between border-b border-paper-200 pb-3">
               <h3 className="font-serif text-base font-bold text-ink-900">
                 Recent Activity
@@ -419,10 +417,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="text-[10px] font-mono text-ink-400">Live Audit</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 font-sans">
               {activities.map((act) => (
                 <div key={act.id} className="flex items-start space-x-3 text-xs">
-                  <div className="w-1.5 h-1.5 rounded-full bg-gold-600 mt-1.5 flex-shrink-0" />
+                  <span className="font-mono text-[10px] text-gold-600 font-bold mt-0.5">·</span>
                   <div className="space-y-0.5">
                     <p className="font-semibold text-ink-900">{act.title}</p>
                     <p className="text-ink-600 text-[11px] leading-relaxed font-normal">

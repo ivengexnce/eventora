@@ -1,0 +1,187 @@
+'use client';
+
+import React, { useState } from 'react';
+import { IconClose } from './Icons';
+
+interface LegalModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialTab?: 'tos' | 'privacy';
+}
+
+export const LegalModal: React.FC<LegalModalProps> = ({
+  isOpen,
+  onClose,
+  initialTab = 'tos',
+}) => {
+  const [activeTab, setActiveTab] = useState<'tos' | 'privacy'>(initialTab);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/60 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-3xl bg-card border border-paper-300 rounded-sm my-8 overflow-hidden">
+        {/* Header */}
+        <div className="px-6 sm:px-8 py-5 border-b border-paper-300 bg-paper-100 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setActiveTab('tos')}
+              className={`text-xs font-mono uppercase tracking-wider py-1 border-b-2 font-semibold transition-colors ${
+                activeTab === 'tos'
+                  ? 'border-ink-900 text-ink-900'
+                  : 'border-transparent text-ink-500 hover:text-ink-800'
+              }`}
+            >
+              Terms of Service
+            </button>
+            <button
+              onClick={() => setActiveTab('privacy')}
+              className={`text-xs font-mono uppercase tracking-wider py-1 border-b-2 font-semibold transition-colors ${
+                activeTab === 'privacy'
+                  ? 'border-ink-900 text-ink-900'
+                  : 'border-transparent text-ink-500 hover:text-ink-800'
+              }`}
+            >
+              Privacy Policy
+            </button>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="p-1 rounded-sm text-ink-400 hover:text-ink-900 hover:bg-paper-200 transition-colors"
+            aria-label="Close legal modal"
+          >
+            <IconClose className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content Body */}
+        <div className="p-6 sm:p-8 max-h-[70vh] overflow-y-auto space-y-6 text-xs text-ink-700 leading-relaxed font-sans">
+          {activeTab === 'tos' ? (
+            <div className="space-y-5">
+              <div>
+                <h3 className="font-serif text-xl font-bold text-ink-900">
+                  Eventora Terms of Service
+                </h3>
+                <p className="text-[11px] font-mono text-ink-400 mt-0.5">
+                  Effective Date: November 1, 2026 · Version 1.2
+                </p>
+              </div>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  1. Acceptance of Terms
+                </h4>
+                <p>
+                  By accessing or utilizing Eventora (&quot;the Platform&quot;), you acknowledge that you have read, understood, and agreed to be legally bound by these Terms of Service. If you do not agree with any portion of these terms, you must discontinue using the platform immediately.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  2. Generative AI Advisory Scope & Financial Estimation
+                </h4>
+                <p>
+                  Eventora incorporates generative artificial intelligence models to assist celebration hosts in synthesizing conceptual themes, budget models, timeline sequences, and vendor checklists. All budget figures, percentage distributions, and vendor quote estimates are calculated for illustrative advisory purposes. Eventora does not act as a financial lender, escrow service, or licensed broker. Users are solely responsible for executing final contractual arrangements with vendors.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  3. Vendor Outreach and Third-Party Communications
+                </h4>
+                <p>
+                  The platform provides optional pre-filled WhatsApp and email outreach scripts for direct vendor communication. Eventora does not guarantee vendor availability, licensing, quality of execution, or pricing accuracy. Any contract, deposit, or dispute arising between a host and an external vendor remains strictly bilateral.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  4. Intellectual Property and User Content
+                </h4>
+                <p>
+                  All software architecture, visual typography, and algorithmic models comprising Eventora are the intellectual property of Eventora. Event concepts and custom text inputs generated by users belong to the respective creators.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  5. Governing Law and Jurisdiction
+                </h4>
+                <p>
+                  These Terms are governed by and construed in accordance with the substantive laws of India. Any legal dispute arising under these terms shall be subject to the exclusive jurisdiction of the competent courts in Mumbai, Maharashtra.
+                </p>
+              </section>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <div>
+                <h3 className="font-serif text-xl font-bold text-ink-900">
+                  Eventora Privacy Policy
+                </h3>
+                <p className="text-[11px] font-mono text-ink-400 mt-0.5">
+                  Effective Date: November 1, 2026 · Transparency Commitment
+                </p>
+              </div>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  1. Local-First Data Storage Architecture
+                </h4>
+                <p>
+                  Eventora operates on a privacy-preserving, local-first client architecture. Your created celebration plans, expense ledger records, milestone checklists, and vendor contact records are persisted directly in your browser&apos;s localStorage session. Eventora does not store or sell personal contact rosters to third-party marketing brokers.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  2. Processing of Generative AI Prompts
+                </h4>
+                <p>
+                  When you request an AI Event Plan generation, only the non-sensitive celebration parameters (event type, guest count, city, target budget, and dietary preferences) are transmitted via encrypted HTTPS to our server-side planning endpoint for synthesis. No personal identifying payment details or bank accounts are ever collected or processed.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  3. Cookies and Analytics
+                </h4>
+                <p>
+                  Eventora utilizes minimal functional browser storage tokens strictly necessary to maintain event synchronization across tabs and preferences. We do not deploy third-party advertising tracking pixels or surveillance cookies.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  4. Data Deletion and Portability
+                </h4>
+                <p>
+                  You retain complete ownership over your celebration data. You may delete individual expenses, milestones, or vendor records at any moment, or clear your browser data to immediately wipe all local records.
+                </p>
+              </section>
+
+              <section className="space-y-1.5">
+                <h4 className="font-serif text-sm font-bold text-ink-900">
+                  5. Contact Data Privacy Officer
+                </h4>
+                <p>
+                  For privacy inquiries or technical clarification regarding Eventora&apos;s data handling practices, contact privacy@eventora.app.
+                </p>
+              </section>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 sm:px-8 py-4 bg-paper-100 border-t border-paper-300 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-sm bg-ink-900 hover:bg-ink-950 text-white font-medium text-xs transition-colors"
+          >
+            I Understand & Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
